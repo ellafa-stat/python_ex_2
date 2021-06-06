@@ -37,8 +37,63 @@
 def is_valid_email_address(s):
     
     # your code here
+    def result(code):
+        errors = {
+            "AtMissing":"Missing '@' symbol",
+            "DomainExtensionMissing":"Missing domain extension",
+            "DomainExtensionInvalid":"Domain extension not in 'com edu org gov'",
+            "DomainNameMissing":"Missing domain name",
+            "DomainNameInvalid":"Domain name must have between 2 and 8 alpha numeric characters",
+            "UsernameMissing":"Missing username",
+            "UsernameInvalid":"Username must have between 3 and 16 alpha numeric characters",
+            "None":"Seems legit"
+        }
+        return [code, errors[code]]
 
-    
+    # check for missing @
+    at_pos = s.find('@')
+    if at_pos == -1:
+        return result("AtMissing")
+
+    # check for domain extension
+    has_domext = s[-4]
+    if has_domext != '.':
+        return result("DomainExtensionMissing")
+
+    # check for valid domain extension
+    domains = ["com", "edu", "org", "gov"]
+    domain = s[-3:]
+    if domain not in domains:
+        return result("DomainExtensionInvalid")
+
+    # check for missing domain name
+    domain_name = s[at_pos+1:-4]
+    if domain_name == '':
+        return result("DomainNameMissing")
+
+    # check for invalid domain name length
+    if len(domain_name) < 2 or len(domain_name) > 8:
+        return result("DomainNameInvalid")
+
+    # check for invalid domain name chars
+    if domain_name.isalnum() == False:
+        return result("DomainNameInvalid")
+
+    # check for missing username
+    username = s[:at_pos]
+    if username == '':
+        return result("UsernameMissing")
+
+    # check for invalid username length
+    if len(username) < 3 or len(username) > 16:
+        return result("UsernameInvalid")
+
+    # check for invalid username chars
+    if username.isalnum() == False:
+        return result("UsernameInvalid")
+
+    # checks out
+    return result("None")
 
 
     
@@ -57,7 +112,7 @@ if __name__ == "__main__":
         "chris@pymart.biz",
         "chris@letsgo!.org",
         "chris@megasavings.org",
-        "tc@tank.com",
+        "tc@tank.com"
         ]
     # validate each email from the list
     for e in email_list:
